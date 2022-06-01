@@ -1,0 +1,130 @@
+﻿<Window
+    x:Class="WPFSpinner.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:WPFSpinner.Converters"
+    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:gear="clr-namespace:WPFSpinner"
+    Title="MainWindow"
+    Width="800"
+    Height="800">
+    <Window.Resources>
+        <converters:DoubleToDurationConverter x:Key="DoubleToDurationConverter" />
+    </Window.Resources>
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <ed:Arc
+                    Width="290"
+                    Height="{Binding Width, RelativeSource={RelativeSource Self}}"
+                    ArcThickness="15"
+                    ArcThicknessUnit="Pixel"
+                    EndAngle="360"
+                    Fill="Gray"
+                    Stretch="None" />
+                <ed:Arc
+                    x:Name="ARC1"
+                    Width="300"
+                    Height="{Binding Width, RelativeSource={RelativeSource Self}}"
+                    ArcThickness="25"
+                    ArcThicknessUnit="Pixel"
+                    EndAngle="200"
+                    Fill="#FF5484AC"
+                    Stretch="None" />
+                <Grid x:Name="grid">
+                    <Grid.Resources>
+                        <Storyboard x:Key="flipItGood" Duration="0:0:1">
+                            <DoubleAnimation
+                                Storyboard.TargetName="ProgressBarLabel"
+                                Storyboard.TargetProperty="Opacity"
+                                From="0"
+                                To="1.0"
+                                Duration="0:0:0.3" />
+                            <ThicknessAnimation
+                                Storyboard.TargetName="ProgressBarLabel"
+                                Storyboard.TargetProperty="Margin"
+                                From="0 -50 0 0"
+                                To="0 0 0 0"
+                                Duration="00:00:0.3" />
+                        </Storyboard>
+                    </Grid.Resources>
+                    <Grid.Triggers>
+                        <!--
+                            THIS IS HERE ONLY FOR AN IMMEDIATE EXAMPLE
+                            DITCH THIS TRIGGER FOR THE TARGET.UPDATED ONE WHEN ACTUALLY USING
+                        -->
+                        <EventTrigger RoutedEvent="gear:MyControl.CustomTest">
+                            <BeginStoryboard Storyboard="{StaticResource flipItGood}" />
+                        </EventTrigger>
+                    </Grid.Triggers>
+                    <Label
+                        x:Name="ProgressBarLabel"
+                        Margin="10,10,10,50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="60"
+                        FontWeight="Bold">
+                        <Label.Triggers>
+                            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                <BeginStoryboard Storyboard="{StaticResource flipItGood}" />
+                            </EventTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Grid>
+                <fa:ImageAwesome
+                    Width="48"
+                    Height="48"
+                    Margin="10,10,10,50"
+                    VerticalAlignment="Bottom"
+                    Foreground="Black"
+                    Icon="Refresh"
+                    Spin="True">
+                    <fa:ImageAwesome.Style>
+                        <Style TargetType="fa:ImageAwesome">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="MouseEnter">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    AutoReverse="True"
+                                                    Storyboard.TargetProperty="Width"
+                                                    From="48"
+                                                    To="30"
+                                                    Duration="00:00:1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    AutoReverse="True"
+                                                    Storyboard.TargetProperty="Height"
+                                                    From="48"
+                                                    To="30"
+                                                    Duration="00:00:1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>
+                </fa:ImageAwesome>
+            </Grid>
+            <!--<Slider
+                x:Name="SliderA"
+                Width="577"
+                IsSnapToTickEnabled="True"
+                Maximum="10"
+                TickFrequency="1" />-->
+            <Slider
+                x:Name="SliderA"
+                Width="577"
+                IsSnapToTickEnabled="True"
+                Maximum="10"
+                TickFrequency="1"
+                ValueChanged="Slider_ValueChanged" />
+        </StackPanel>
+    </Grid>
+</Window>
